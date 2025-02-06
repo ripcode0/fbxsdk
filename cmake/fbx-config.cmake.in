@@ -1,0 +1,22 @@
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/fbx-targets.cmake")
+
+set_and_check(fbx_INCLUDE_DIRS ${PACKAGE_PREFIX_DIR}/include)
+set_and_check(fbx_LIBRARY_DIRS ${PACKAGE_PREFIX_DIR}/lib)
+#set_and_check(fbx_LIBRARIES fbx::fbx)
+set_and_check(fbx_BIN_DIRS ${PACKAGE_PREFIX_DIR}/bin)
+
+# Additional Custom Package's Variables
+set_and_check(fbx_LIB ${fbx_LIBRARY_DIRS}/libfbxsdk.lib)
+set_and_check(fbx_RUNTIME ${fbx_BIN_DIRS}/libfbxsdk.dll)
+
+set_target_properties(fbx::fbx PROPERTIES
+    INTERFACE_LINK_LIBRARIES ${fbx_LIB})
+
+set(fbx_FOUND TRUE)
+
+message(STATUS "[package] compiler : @CMAKE_C_COMPILER_ID@")
+
+message(STATUS "[package] hello ${PACKAGE_PREFIX_DIR} ${CMAKE_INSTALL_INCLUDEDIR}")
+
