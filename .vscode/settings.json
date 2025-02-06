@@ -1,7 +1,0 @@
-{
-    "cmake.configureArgs": [
-        //"-DBUILD_SAMPLE:BOOL=TRUE"
-    ],
-    "cmake.installPrefix": "external",
-    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
-}
