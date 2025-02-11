@@ -4,34 +4,41 @@ if(MSVC)
     set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "" FORCE)
 endif()
 
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+endif()
+
 project(fbx VERSION 1.0.0 LANGUAGES C CXX)
 
-set(fbx_lib ${CMAKE_CURRENT_SOURCE_DIR}/lib/libfbxsdk.lib)
-set(fbx_dll ${CMAKE_CURRENT_SOURCE_DIR}/lib/libfbxsdk.dll)
-set(fbx_inc_dir ${CMAKE_CURRENT_SOURCE_DIR}/include)
+option(BUILD_SAMPLE "fbx build the sample" FALSE)
+
+set(fbx_LIB ${CMAKE_CURRENT_SOURCE_DIR}/lib/${CMAKE_BUILD_TYPE}/libfbxsdk.lib)
+set(fbx_DLL ${CMAKE_CURRENT_SOURCE_DIR}/lib/${CMAKE_BUILD_TYPE}/libfbxsdk.dll)
+set(fbx_INC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 add_library(fbx INTERFACE)
+add_library(fbx::fbx ALIAS fbx)
 
 include(GNUInstallDirs)
 
 target_include_directories(
     fbx
     INTERFACE
-    $<BUILD_INTERFACE:${fbx_inc_dir}>
+    $<BUILD_INTERFACE:${fbx_INC}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}>
 )
 
 target_link_libraries(
     fbx
     INTERFACE
-    $<BUILD_INTERFACE:${fbx_lib}>
+    $<BUILD_INTERFACE:${fbx_LIB}>
     $<INSTALL_INTERFACE:${_IMPORT_PREFIX}/libfbxsdk.lib>
 )
 
 target_link_directories(
     fbx
     INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib/${CMAKE_BUILD_TYPE}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_LIBDIR}>
 )
 
@@ -70,8 +77,8 @@ install(
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/fbx
     )
 
-install(FILES ${fbx_lib} DESTINATION ${CMAKE_INSTALL_LIBDIR})
-install(FILES ${fbx_dll} DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(FILES ${fbx_LIB} DESTINATION ${CMAKE_INSTALL_LIBDIR})
+install(FILES ${fbx_DLL} DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 
 if(BUILD_SAMPLE)
